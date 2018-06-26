@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table { border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; }
+        th { text-align: left; }
+        td { text-align: center; }
+    </style>
+</head>
+<body>
+    <div style="width: 600px;">
+        
+        <h1>Grupp F</h1>
+
+        <table>
+            <tr>
+                <th colspan="5">Omgång 1</th>
+            </tr>
+            <tr>
+                <td>Tyskland</td>
+                <td>0</td>
+                <td> - </td>
+                <td>1</td>
+                <td>Mexiko</td>
+            </tr>
+            <tr>
+                <td>Sverige</td>
+                <td>1</td>
+                <td> - </td>
+                <td>0</td>
+                <td>Sydkorea</td>
+            </tr>
+            <tr>
+                <th colspan="5">Omgång 2</th>
+            </tr>
+            <tr>
+                <td>Sydkorea</td>
+                <td>1</td>
+                <td> - </td>
+                <td>2</td>
+                <td>Mexiko</td>
+            </tr>
+            <tr>
+                <td>Tyskland</td>
+                <td>2</td>
+                <td> - </td>
+                <td>1</td>
+                <td>Sverige</td>
+            </tr>
+            <tr>
+                <th colspan="5">Omgång 3</th>
+            </tr>
+            <!-- 
+            //        bc: [ 0, 0 ], // Mexiko - Sverige
+            //        da: [ 0, 0 ]  // Sydkorea - Tyskland
+            -->
+            <tr id="r3_m1">
+                <td id="r3_m1_b">Mexico</td>
+                <td><input type="number" min="0" max="9" id="r3_m1_b_s" value="0"></td>
+                <td> - </td>
+                <td><input type="number" min="0" max="9" id="r3_m1_c_s" value="0"></td>
+                <td id="r3_m1_c">Sverige</td>
+                
+            </tr>
+            <tr id="r3_m2">
+                <td id="r3_m2_d">Sydkorea</td>
+                <td><input type="number" min="0" max="9" id="r3_m2_d_s" value="0"></td>
+                <td> - </td>
+                <td><input type="number" min="0" max="9" id="r3_m2_a_s" value="0"></td>
+                <td id="r3_m2_a">Tyskland</td>
+            </tr>
+        </table>
+
+        <br>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Plats</th>
+                    <th>Lag</th>
+                    <th>V</th>
+                    <th>O</th>
+                    <th>F</th>
+                    <th>Mål (gjorda/insl.)</th>
+                    <th>Poäng</th>
+                </tr>
+            </thead>
+            <tbody id="t">
+            </tbody>
+        </table>
+
+        <br>
+
+        <div id="resultsTxt" style="font-family: monospace;"></div>
+
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        /* global jQuery */
+
+/*
+teams = {
+    a: { n: 'Tyskland', w: 0, t: 0, l: 0, s: 0, a: 0, g: 0, p: 0 },
+    b: { n: 'Mexiko', w: 0, t: 0, l: 0, s: 0, a: 0, g: 0, p: 0 },
+    c: { n: 'Sverige', w: 0, t: 0, l: 0, s: 0, a: 0, g: 0, p: 0 },
+    d: { n: 'Sydkorea', w: 0, t: 0, l: 0, s: 0, a: 0, g: 0, p: 0 }
+};
+*/
+
+var results = {
+
+    ab: [ 0, 1 ],
+    cd: [ 1, 0 ],
+
+    ca: [ 1, 2 ],
+    bd: [ 2, 1 ],
+
+    bc: [ 0, 0 ], // Mexiko - Sverige
+    da: [ 0, 0 ]  // Sydkorea - Tyskland
+
+};
+
+Array.prototype.insert = function ( index, item ) {
+    'use strict';
+    this.splice( index, 0, item );
+};
+
+( function ( $ ) {
+
+    'use strict';
+
+    var $tbl       = $( '#t' ),
+        teams      = {},
+        teams2     = {},
+        sortOrder  = [ 'a', 'b', 'c', 'd' ],
+        secondSort = [];
+
+    function getZeroedTeamObj( n ) {
+        return { n: n, w: 0, t: 0, l: 0, s: 0, a: 0, g: 0, p: 0 };
+    }
+
+    function setScores( matches, teamObj ) {
+        var _teams = {}, team;
+        for ( team in teamObj ) {
+            if ( teamObj.hasOwnProperty( team ) ) {
+                _teams[ team ] = getZeroedTeamObj( teamObj[ team ].n );
+            }
+        }
+        matches.forEach( function ( match ) {
+            var t1    = match.substr( 0, 1 ),
+                t2    = match.substr( 1, 1 ),
+                score = results[ match ];
+
+
+
+            _teams[ t1 ].s += score[ 0 ];
+            _teams[ t2 ].s += score[ 1 ];
+            _teams[ t1 ].a += score[ 1 ];
+            _teams[ t2 ].a += score[ 0 ];
+            _teams[ t1 ].g += ( score[ 0 ] - score[ 1 ] );
+            _teams[ t2 ].g += ( score[ 1 ] - score[ 0 ] );
+            if ( score[ 0 ] > score[ 1 ] ) {
+                _teams[ t1 ].p += 3;
+                _teams[ t1 ].w += 1;
+                _teams[ t2 ].l += 1;
+            } else if ( score[ 0 ] < score[ 1 ] ) {
+                _teams[ t2 ].p += 3;
+                _teams[ t2 ].w += 1;
+                _teams[ t1 ].l += 1;
+            } else {
+                _teams[ t1 ].p += 1;
+                _teams[ t2 ].p += 1;
+                _teams[ t1 ].t += 1;
+                _teams[ t2 ].t += 1;
+            }
+        } );
+
+        $.extend( teamObj, _teams );
+
+    }
+
+    function repaintRows() {
+        $tbl.html( '' );
+        sortOrder.forEach( function ( team, i ) {
+            $tbl.append( '<tr>' +
+                         '<td>' + ( i + 1 ) + '</td>' +
+                         '<th>' + teams[ team ].n + '</th>' +
+                         '<td>' + teams[ team ].w + '</td>' +
+                         '<td>' + teams[ team ].t + '</td>' +
+                         '<td>' + teams[ team ].l + '</td>' +
+                         '<td>' + teams[ team ].g + ' (' +
+                         teams[ team ].s + '/' +
+                         teams[ team ].a + ')</td>' +
+                         '<td>' + teams[ team ].p + '</td>' +
+                         '</tr>' );
+        } );
+
+    }
+
+    /*
+
+    First step: Pursuant to the criteria listed in art. 32 (5) lit. a) to c)
+    of the Competition Regulations.
+
+    1 greatest number of points obtained in all group matches;
+    2 goal difference in all group matches;
+    3 greatest number of goals scored in all group matches.
+
+    Second step: If two or more teams are equal on the basis of the first step
+    (see example in Table 1), their ranking will be determined by applying to
+    the group matches between the teams concerned the criteria listed in
+    art. 32 (5) lit. d) to h) in the order of their listing.
+
+    1 greatest number of points obtained in the group matches between the teams concerned;
+    2 goal difference resulting from the group matches between the teams concerned;
+    3 greater number of goals scored in all group matches between the teams concerned;
+    4 greater number of points obtained in the fair play conduct of the teams based
+      on yellow and red cards received in all group matches;
+    5 drawing of lots by the FIFA.
+
+    */
+
+    function sortRows() {
+
+        var matches2   = [],
+            newSort    = [],
+            j          = 0,
+            resultsTxt = '',
+            i, key;
+
+        resultsTxt += '--- STEG ETT ---<br>';
+
+        sortOrder.sort( function ( a, b ) {
+            // 1. Points
+            if ( teams[ a ].p > teams[ b ].p ) {
+                resultsTxt += '1. ' + teams[ a ].n + ' före ' + teams[ b ].n + ' på poäng.<br>';
+                return -1;
+            }
+            if ( teams[ a ].p < teams[ b ].p ) {
+                resultsTxt += '1. ' + teams[ b ].n + ' före ' + teams[ a ].n + ' på poäng.<br>';
+                return 1;
+            }
+            // 2. Goal diff
+            if ( teams[ a ].g > teams[ b ].g ) {
+                resultsTxt +=
+                    '2. ' + teams[ a ].n + ' före ' + teams[ b ].n + ' på målskillnad.<br>';
+                return -1;
+            }
+            if ( teams[ a ].g < teams[ b ].g ) {
+                resultsTxt +=
+                    '2. ' + teams[ b ].n + ' före ' + teams[ a ].n + ' på målskillnad.<br>';
+                return 1;
+            }
+            // 3. Goals scored
+            if ( teams[ a ].s > teams[ b ].s ) {
+                resultsTxt += '3. ' + teams[ a ].n + ' före ' + teams[ b ].n +
+                              ' på gjorda mål.<br>';
+                return -1;
+            }
+            if ( teams[ a ].s < teams[ b ].s ) {
+                resultsTxt += '3. ' + teams[ b ].n + ' före ' + teams[ a ].n +
+                              ' på gjorda mål.<br>';
+                return 1;
+            }
+            if ( secondSort.indexOf( a ) === -1 ) {
+                secondSort.push( a );
+            }
+            if ( secondSort.indexOf( b ) === -1 ) {
+                secondSort.push( b );
+            }
+
+            resultsTxt += '-. ' + teams[ a ].n + ' och ' + teams[ b ].n +
+                          ' avgörs i steg två.<br>';
+
+        } );
+
+        if ( secondSort.length ) {
+
+            secondSort.forEach( function ( team ) {
+                teams2[ team ] = getZeroedTeamObj( teams[ team ].n );
+            } );
+
+            for ( i = 0; i < secondSort.length; i += 1 ) {
+                for ( j = i + 1; j < secondSort.length; j += 1 ) {
+                    key = secondSort[ i ] + secondSort[ j ];
+                    if ( results.hasOwnProperty( key ) ) {
+                        matches2.push( key );
+                    } else {
+                        key = secondSort[ j ] + secondSort[ i ];
+                        if ( results.hasOwnProperty( key ) ) {
+                            matches2.push( key );
+                        }
+                    }
+                }
+            }
+
+            setScores( matches2, teams2 );
+
+            resultsTxt += '--- STEG TVÅ ---<br>';
+            secondSort.sort( function ( a, b ) {
+                // 4. Points
+                if ( teams2[ a ].p > teams2[ b ].p ) {
+                    resultsTxt += '4. ' + teams[ a ].n + ' före ' + teams[ b ].n + ' på poäng.<br>';
+                    return -1;
+                }
+                if ( teams2[ a ].p < teams2[ b ].p ) {
+                    resultsTxt += '4. ' + teams[ b ].n + ' före ' + teams[ a ].n + ' på poäng.<br>';
+                    return 1;
+                }
+                // 5. Goal diff
+                if ( teams2[ a ].g > teams2[ b ].g ) {
+                    resultsTxt += '5. ' + teams[ a ].n + ' före ' + teams[ b ].n +
+                                  ' på målskillnad.<br>';
+                    return -1;
+                }
+                if ( teams2[ a ].g < teams2[ b ].g ) {
+                    resultsTxt += '5. ' + teams[ b ].n + ' före ' + teams[ a ].n +
+                                  ' på målskillnad.<br>';
+                    return 1;
+                }
+                // 6. Goals scored
+                if ( teams2[ a ].s > teams2[ b ].s ) {
+                    resultsTxt +=
+                        '6. ' + teams[ a ].n + ' före ' + teams[ b ].n + ' på gjorda mål.<br>';
+                    return -1;
+                }
+                if ( teams2[ a ].s < teams2[ b ].s ) {
+                    resultsTxt += '6. ' + teams[ b ].n + ' före ' + teams[ a ].n +
+                                  ' på gjorda mål.<br>';
+                    return 1;
+                }
+
+                resultsTxt += '7. ' + teams[ a ].n + ' och ' + teams[ b ].n + ' bestäms via ' +
+                              ' Fair Play eller lottning.<br>';
+
+            } );
+
+            j = 0;
+
+            sortOrder.forEach( function ( team ) {
+                if ( secondSort.indexOf( team ) === -1 ) {
+                    newSort.push( team );
+                } else {
+                    newSort.push( secondSort[ j ] );
+                    j += 1;
+                }
+            } );
+
+            sortOrder = newSort;
+
+            // $( '#resultsTxt' ).html( resultsTxt );
+
+        }
+    }
+
+    function handleScoreChange() {
+        results.bc = [
+            parseInt( $( '#r3_m1_b_s' ).val(), 10 ),
+            parseInt( $( '#r3_m1_c_s' ).val(), 10 )
+        ];
+        results.da = [
+            parseInt( $( '#r3_m2_d_s' ).val(), 10 ),
+            parseInt( $( '#r3_m2_a_s' ).val(), 10 )
+        ];
+
+        [ 'Tyskland', 'Mexiko', 'Sverige', 'Sydkorea' ].forEach( function ( team, i ) {
+            teams[ String.fromCharCode( 97 + i ) ] = getZeroedTeamObj( team );
+        } );
+        sortOrder  = [ 'a', 'b', 'c', 'd' ];
+        secondSort = [];
+        setScores( [ 'ab', 'cd', 'ca', 'bd', 'bc', 'da' ], teams );
+        setTimeout( sortRows, 1 );
+        setTimeout( repaintRows, 1 );
+
+    }
+
+    [ 'Tyskland', 'Mexiko', 'Sverige', 'Sydkorea' ].forEach( function ( team, i ) {
+        teams[ String.fromCharCode( 97 + i ) ] = getZeroedTeamObj( team );
+    } );
+
+    setScores( [ 'ab', 'cd', 'ca', 'bd', 'bc', 'da' ], teams );
+    sortRows();
+    repaintRows();
+
+    $( 'input' ).on( 'click', handleScoreChange );
+
+
+}( jQuery ) );
+</script>
+
+</body>
+
+</html>
