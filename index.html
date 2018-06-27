@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body, input {
             font-family: Helvetica, Arial, sans-serif;
             font-size: 18px;
         }
         table { border-collapse: collapse; }
-        th, td { border: 1px solid #ccc; padding: 5px 10px; }
+        th, td, input { border: 1px solid #ccc; padding: 5px 10px; }
         th { text-align: left; }
         td { text-align: center; }
     </style>
@@ -61,17 +63,17 @@
             -->
             <tr id="r3_m1">
                 <td id="r3_m1_b">Mexico</td>
-                <td><input type="number" min="0" max="9" id="r3_m1_b_s" value="0"></td>
+                <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m1_b_s" value="0"></td>
                 <td> - </td>
-                <td><input type="number" min="0" max="9" id="r3_m1_c_s" value="0"></td>
+                <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m1_c_s" value="0"></td>
                 <td id="r3_m1_c">Sverige</td>
                 
             </tr>
             <tr id="r3_m2">
                 <td id="r3_m2_d">Sydkorea</td>
-                <td><input type="number" min="0" max="9" id="r3_m2_d_s" value="0"></td>
+                <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m2_d_s" value="0"></td>
                 <td> - </td>
-                <td><input type="number" min="0" max="9" id="r3_m2_a_s" value="0"></td>
+                <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m2_a_s" value="0"></td>
                 <td id="r3_m2_a">Tyskland</td>
             </tr>
         </table>
@@ -232,6 +234,7 @@ Array.prototype.insert = function ( index, item ) {
             newSort    = [],
             j          = 0,
             resultsTxt = '',
+            fpTxt = '',
             i, key;
 
         resultsTxt += '--- STEG ETT ---<br>';
@@ -339,6 +342,9 @@ Array.prototype.insert = function ( index, item ) {
                 resultsTxt += '7. ' + teams[ a ].n + ' och ' + teams[ b ].n + ' bestäms via ' +
                               ' Fair Play eller lottning.<br>';
 
+                fpTxt = 'OBS! ' + teams[ a ].n + ' och ' + teams[ b ].n + ' avgörs<br>via ' +
+                              ' Fair Play eller lottning.<br>';
+
             } );
 
             j = 0;
@@ -354,7 +360,7 @@ Array.prototype.insert = function ( index, item ) {
 
             sortOrder = newSort;
 
-            // $( '#resultsTxt' ).html( resultsTxt );
+            $( '#resultsTxt' ).html( fpTxt );
 
         }
     }
@@ -388,7 +394,7 @@ Array.prototype.insert = function ( index, item ) {
     sortRows();
     repaintRows();
 
-    $( 'input' ).on( 'click', handleScoreChange );
+    $( 'input' ).on( 'change', handleScoreChange );
 
 
 }( jQuery ) );
