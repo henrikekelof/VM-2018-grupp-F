@@ -2,79 +2,70 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=480, initial-scale=1">
     <style>
         body, input {
             font-family: Helvetica, Arial, sans-serif;
             font-size: 18px;
+            padding: 10px;
         }
-        table { border-collapse: collapse; }
-        th, td, input { border: 1px solid #ccc; padding: 5px 10px; }
-        th { text-align: left; }
+        body { max-width: 460px; margin: 0 auto; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td, input { border: 1px solid #ccc; padding: 5px 10px; white-space: nowrap; }
+        th { text-align: left; background-color: #eee; }
         td { text-align: center; }
+        .fair-play td, .fair-play th { font-style: italic; background-color: #fff3f4; }
     </style>
 </head>
 <body>
-    <div style="width: 600px;">
+    
         
-        <h1>Grupp F</h1>
+        <h1>VM 2018, Grupp F</h1>
 
         <table>
             <tr>
-                <th colspan="5">Omgång 1</th>
+                <th colspan="3">Omgång 1</th>
             </tr>
             <tr>
-                <td>Tyskland</td>
-                <td>0</td>
-                <td> - </td>
-                <td>1</td>
-                <td>Mexiko</td>
+                <td style="width: 50%; text-align:left;">Tyskland</td>
+                <td>0 - 1</td>
+                <td style="width: 50%; text-align: right;">Mexiko</td>
             </tr>
             <tr>
-                <td>Sverige</td>
-                <td>1</td>
-                <td> - </td>
-                <td>0</td>
-                <td>Sydkorea</td>
+                <td style="text-align:left;">Sverige</td>
+                <td>1 - 0</td>
+                <td style="text-align: right;">Sydkorea</td>
             </tr>
             <tr>
-                <th colspan="5">Omgång 2</th>
+                <th colspan="3">Omgång 2</th>
             </tr>
             <tr>
-                <td>Sydkorea</td>
-                <td>1</td>
-                <td> - </td>
-                <td>2</td>
-                <td>Mexiko</td>
+                <td style="text-align:left;">Sydkorea</td>
+                <td>1 - 2</td>
+                <td style="text-align: right;">Mexiko</td>
             </tr>
             <tr>
-                <td>Tyskland</td>
-                <td>2</td>
-                <td> - </td>
-                <td>1</td>
-                <td>Sverige</td>
+                <td style="text-align:left;">Tyskland</td>
+                <td>2 - 1</td>
+                <td style="text-align: right;">Sverige</td>
             </tr>
             <tr>
-                <th colspan="5">Omgång 3</th>
+                <th colspan="3">Omgång 3</th>
             </tr>
             <!-- 
             //        bc: [ 0, 0 ], // Mexiko - Sverige
             //        da: [ 0, 0 ]  // Sydkorea - Tyskland
             -->
             <tr id="r3_m1">
-                <td id="r3_m1_b">Mexico</td>
-                <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m1_b_s" value="0"></td>
-                <td> - </td>
-                <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m1_c_s" value="0"></td>
-                <td id="r3_m1_c">Sverige</td>
+                <td id="r3_m1_b" style="text-align:left;">Mexico</td>
+                <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m1_b_s" value="0"> - <input type="number" pattern="\d*" min="0" max="9" id="r3_m1_c_s" value="0"></td>
+                <td id="r3_m1_c" style="text-align: right;">Sverige</td>
                 
             </tr>
             <tr id="r3_m2">
-                <td id="r3_m2_d">Sydkorea</td>
-                <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m2_d_s" value="0"></td>
-                <td> - </td>
-                <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m2_a_s" value="0"></td>
-                <td id="r3_m2_a">Tyskland</td>
+                <td id="r3_m2_d" style="text-align:left;">Sydkorea</td>
+                <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m2_d_s" value="0"> - <input type="number" pattern="\d*" min="0" max="9" id="r3_m2_a_s" value="0"></td>
+                <td id="r3_m2_a" style="text-align: right;">Tyskland</td>
             </tr>
         </table>
 
@@ -89,7 +80,7 @@
                     <th>V</th>
                     <th>O</th>
                     <th>F</th>
-                    <th>Mål (gjorda/insl.)</th>
+                    <th>Mål</th>
                     <th>Poäng</th>
                 </tr>
             </thead>
@@ -101,7 +92,7 @@
 
         <div id="resultsTxt" style="font-family: monospace;"></div>
 
-    </div>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         /* global jQuery */
@@ -144,7 +135,7 @@ Array.prototype.insert = function ( index, item ) {
         secondSort = [];
 
     function getZeroedTeamObj( n ) {
-        return { n: n, w: 0, t: 0, l: 0, s: 0, a: 0, g: 0, p: 0 };
+        return { n: n, w: 0, t: 0, l: 0, s: 0, a: 0, g: 0, p: 0, css: '' };
     }
 
     function setScores( matches, teamObj ) {
@@ -158,9 +149,6 @@ Array.prototype.insert = function ( index, item ) {
             var t1    = match.substr( 0, 1 ),
                 t2    = match.substr( 1, 1 ),
                 score = results[ match ];
-
-
-
             _teams[ t1 ].s += score[ 0 ];
             _teams[ t2 ].s += score[ 1 ];
             _teams[ t1 ].a += score[ 1 ];
@@ -190,13 +178,13 @@ Array.prototype.insert = function ( index, item ) {
     function repaintRows() {
         $tbl.html( '' );
         sortOrder.forEach( function ( team, i ) {
-            $tbl.append( '<tr>' +
+            $tbl.append( '<tr class="' + teams[ team ].css + '">' +
                          '<td>' + ( i + 1 ) + '</td>' +
                          '<th>' + teams[ team ].n + '</th>' +
                          '<td>' + teams[ team ].w + '</td>' +
                          '<td>' + teams[ team ].t + '</td>' +
                          '<td>' + teams[ team ].l + '</td>' +
-                         '<td>' + teams[ team ].g + ' (' +
+                         '<td>' + ( teams[ team ].g > 0 ? '+' : '' ) + teams[ team ].g + ' (' +
                          teams[ team ].s + '/' +
                          teams[ team ].a + ')</td>' +
                          '<td>' + teams[ team ].p + '</td>' +
@@ -342,9 +330,10 @@ Array.prototype.insert = function ( index, item ) {
                 resultsTxt += '7. ' + teams[ a ].n + ' och ' + teams[ b ].n + ' bestäms via ' +
                               ' Fair Play eller lottning.<br>';
 
-                fpTxt = 'OBS! ' + teams[ a ].n + ' och ' + teams[ b ].n + ' avgörs<br>via ' +
-                              ' Fair Play eller lottning.<br>';
-
+                fpTxt = 'OBS!<br>' + teams[ a ].n + ' och ' + teams[ b ].n + ' avgörs via ' +
+                              ' Fair Play<br>eller lottning. Tabellen <b><i>kan</i></b> visa fel!';
+                teams[ a ].css = 'fair-play';
+                teams[ b ].css = 'fair-play';
             } );
 
             j = 0;
