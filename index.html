@@ -377,6 +377,7 @@ Array.prototype.insert = function ( index, item ) {
     }
 
     function handleScoreChange() {
+        $( '#resultsTxt' ).html( '' );
         results.bc = [
             parseInt( $( '#r3_m1_b_s' ).val(), 10 ),
             parseInt( $( '#r3_m1_c_s' ).val(), 10 )
