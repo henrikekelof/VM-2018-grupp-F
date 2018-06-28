@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=480">
-    <title>VM 2018, Grupp F</title>
+    <title>VM 2018, Grupp H</title>
     <style>
         body {
             font-family: Helvetica, Arial, sans-serif;
@@ -43,34 +43,34 @@
 <body>
     
         
-        <h1>VM 2018, Grupp F</h1>
+        <h1>VM 2018, Grupp H</h1>
 
         <table>
             <tr>
                 <th colspan="3">Omgång 1</th>
             </tr>
             <tr>
-                <td style="width: 50%; text-align:left;">Tyskland</td>
-                <td>0 - 1</td>
-                <td style="width: 50%; text-align: right;">Mexiko</td>
+                <td style="width: 50%; text-align:left;">Colombia</td>
+                <td>1 - 2</td>
+                <td style="width: 50%; text-align: right;">Japan</td>
             </tr>
             <tr>
-                <td style="text-align:left;">Sverige</td>
-                <td>1 - 0</td>
-                <td style="text-align: right;">Sydkorea</td>
+                <td style="text-align:left;">Polen</td>
+                <td>1 - 2</td>
+                <td style="text-align: right;">Senegal</td>
             </tr>
             <tr>
                 <th colspan="3">Omgång 2</th>
             </tr>
             <tr>
-                <td style="text-align:left;">Sydkorea</td>
-                <td>1 - 2</td>
-                <td style="text-align: right;">Mexiko</td>
+                <td style="text-align:left;">Japan</td>
+                <td>2 - 2</td>
+                <td style="text-align: right;">Senegal</td>
             </tr>
             <tr>
-                <td style="text-align:left;">Tyskland</td>
-                <td>2 - 1</td>
-                <td style="text-align: right;">Sverige</td>
+                <td style="text-align:left;">Polen</td>
+                <td>0 - 3</td>
+                <td style="text-align: right;">Colombia</td>
             </tr>
             <tr>
                 <th colspan="3">Omgång 3</th>
@@ -80,15 +80,15 @@
             //        da: [ 0, 0 ]  // Sydkorea - Tyskland
             -->
             <tr id="r3_m1">
-                <td id="r3_m1_b" style="text-align:left;">Mexico</td>
+                <td id="r3_m1_b" style="text-align:left;">Japan</td>
                 <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m1_b_s" value="0"> - <input type="number" pattern="\d*" min="0" max="9" id="r3_m1_c_s" value="0"></td>
-                <td id="r3_m1_c" style="text-align: right;">Sverige</td>
+                <td id="r3_m1_c" style="text-align: right;">Polen</td>
                 
             </tr>
             <tr id="r3_m2">
-                <td id="r3_m2_d" style="text-align:left;">Sydkorea</td>
+                <td id="r3_m2_d" style="text-align:left;">Senegal</td>
                 <td style="padding: 0"><input type="number" pattern="\d*" min="0" max="9" id="r3_m2_d_s" value="0"> - <input type="number" pattern="\d*" min="0" max="9" id="r3_m2_a_s" value="0"></td>
-                <td id="r3_m2_a" style="text-align: right;">Tyskland</td>
+                <td id="r3_m2_a" style="text-align: right;">Colombia</td>
             </tr>
         </table>
 
@@ -131,11 +131,13 @@ teams = {
 
 var results = {
 
-    ab: [ 0, 1 ],
-    cd: [ 1, 0 ],
+    // [ 'Colombia', 'Japan', 'Polen', 'Senegal' ]
 
-    ca: [ 1, 2 ],
-    bd: [ 2, 1 ],
+    ab: [ 1, 2 ],
+    cd: [ 1, 2 ],
+
+    ca: [ 0, 3 ],
+    bd: [ 2, 2 ],
 
     bc: [ 0, 0 ], // Mexiko - Sverige
     da: [ 0, 0 ]  // Sydkorea - Tyskland
@@ -388,7 +390,7 @@ Array.prototype.insert = function ( index, item ) {
             parseInt( $( '#r3_m2_a_s' ).val(), 10 )
         ];
 
-        [ 'Tyskland', 'Mexiko', 'Sverige', 'Sydkorea' ].forEach( function ( team, i ) {
+        [ 'Colombia', 'Japan', 'Polen', 'Senegal' ].forEach( function ( team, i ) {
             teams[ String.fromCharCode( 97 + i ) ] = getZeroedTeamObj( team );
         } );
         sortOrder  = [ 'a', 'b', 'c', 'd' ];
@@ -399,7 +401,7 @@ Array.prototype.insert = function ( index, item ) {
 
     }
 
-    [ 'Tyskland', 'Mexiko', 'Sverige', 'Sydkorea' ].forEach( function ( team, i ) {
+    [ 'Colombia', 'Japan', 'Polen', 'Senegal' ].forEach( function ( team, i ) {
         teams[ String.fromCharCode( 97 + i ) ] = getZeroedTeamObj( team );
     } );
 
